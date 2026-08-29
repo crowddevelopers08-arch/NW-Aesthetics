@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   NW Aesthetics — theme sampled directly from public/images/logo.png
+     violet "N" -> #3b027a   (primary accent, 14.2:1 on white)
+     azure  "W" -> #0170cc   (secondary accent, 5.0:1 on white)
+   White background. Flat colour only — NO gradients anywhere,
+   CTA buttons included. Token names are palette-neutral, so a
+   future rebrand stays a one-file edit.
+------------------------------------------------------------------- */
+@theme {
+  /* primary accent — the violet N */
+  --color-accent: #3b027a;
+  --color-accent-deep: #2a0157;
+  --color-accent-tint: #f1ebfa;
+
+  /* secondary accent — the azure W */
+  --color-brand-blue: #0170cc;
+  --color-brand-blue-deep: #015499;
+  --color-brand-blue-tint: #e7f1fb;
+
+  /* surfaces */
+  --color-surface: #ffffff;
+  --color-surface-alt: #f6f7fa;
+  --color-surface-sunken: #eaecf3;
+
+  /* lines */
+  --color-line: #e3e6ef;
+  --color-line-strong: #c7ccdb;
+
+  /* hand-drawn underline under every section heading — follows the
+     primary accent, so a rebrand still only touches --color-accent */
+  --color-swash: var(--color-accent);
+
+  /* text */
+  --color-ink-strong: #14111f;
+  --color-ink: #2e2b3d;
+  --color-ink-soft: #56536a;
+  --color-ink-faint: #6f6d87;
+
+  /* Jost, self-hosted via next/font in layout.tsx. --font-jost carries the
+     metric-matched "Jost Fallback" already, so no swap-shift. */
+  --font-body: var(--font-jost), system-ui, sans-serif;
+
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  /* heavier baseline weight across the whole site */
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-surface-alt);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-line-strong);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ink-faint);
+}
+
+/* Reveal-on-scroll: hidden until IntersectionObserver adds .is-visible */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+}
