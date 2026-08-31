@@ -33,7 +33,7 @@ export default function PrivacyPolicyPage() {
     <>
       <Nav />
       <main>
-        <Section className="pt-28 sm:pt-32">
+        <Section className="pt-32 sm:pt-36">
           <Eyebrow>Legal</Eyebrow>
           <Heading className="max-w-lg">Privacy Policy</Heading>
 

@@ -35,7 +35,7 @@ export default function ThankYouPage() {
     <>
       <Nav />
       <main>
-        <section className="bg-surface px-4 pt-28 pb-14 sm:px-6 sm:pt-32 md:py-16 lg:flex lg:min-h-svh lg:items-center lg:px-8 lg:py-20">
+        <section className="bg-surface px-4 pt-32 pb-14 sm:px-6 sm:pt-36 sm:pb-16 lg:flex lg:min-h-svh lg:items-center lg:px-8 lg:pb-20">
           <div className="mx-auto w-full max-w-3xl text-center">
             <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-accent sm:h-20 sm:w-20">
               <svg

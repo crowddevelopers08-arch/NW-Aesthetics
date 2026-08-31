@@ -44,7 +44,7 @@ export default function Hero() {
   return (
     <section
       id="top"
-      className="bg-surface px-4 pt-20 pb-10 sm:px-6 sm:pt-24 sm:pb-12 lg:flex lg:min-h-svh lg:items-center lg:px-8 lg:pt-24 lg:pb-12"
+      className="bg-surface px-4 pt-20 pb-10 sm:px-6 sm:pt-30 sm:pb-12 lg:flex lg:min-h-svh lg:items-center lg:px-8 lg:pt-30 lg:pb-12"
     >
       {/* Three blocks in source order: headline, machine, call to action.
           Stacked on mobile that puts the machine between the copy and the CTA;
