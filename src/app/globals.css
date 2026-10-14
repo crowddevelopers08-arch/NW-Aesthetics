@@ -79,6 +79,160 @@ body {
   background: var(--color-ink-faint);
 }
 
+/* ------------------------------------------------------------------
+   Product landing-page themes. Each page wraps itself in one of these,
+   which re-points the shared tokens — so every existing utility
+   (bg-accent, text-brand-blue, bg-surface-alt…) follows the product's
+   packaging colour without a single component knowing about it.
+------------------------------------------------------------------- */
+
+/* NucleoSkin — the turquoise of the Promoitalia box. The accent is a
+   deepened teal so text and buttons keep ≥4.5:1 on white; the bright
+   box teal is the secondary, used only for decoration. */
+.theme-nucleoskin {
+  --color-accent: #0b6f6c;
+  --color-accent-deep: #074e4c;
+  --color-accent-tint: #e2f4f2;
+  --color-brand-blue: #2ec4b6;
+  --color-brand-blue-deep: #1a9d91;
+  --color-brand-blue-tint: #effaf8;
+  --color-surface-alt: #f3f8f8;
+  --color-surface-sunken: #e3eeee;
+  --color-line: #dce9e8;
+  --color-line-strong: #bfd6d4;
+  /* @theme resolves the swash at :root, so re-point it here too */
+  --color-swash: var(--color-accent);
+}
+
+/* Pink Intimate — the magenta of the Pink Intimate box, deepened for
+   contrast on white; the bright box pink is the decorative secondary. */
+.theme-pink-intimate {
+  --color-accent: #a8005a;
+  --color-accent-deep: #7d0043;
+  --color-accent-tint: #fcebf3;
+  --color-brand-blue: #e6007e;
+  --color-brand-blue-deep: #b80065;
+  --color-brand-blue-tint: #fdf2f7;
+  --color-surface-alt: #fbf6f8;
+  --color-surface-sunken: #f3e6ec;
+  --color-line: #f0e1e8;
+  --color-line-strong: #dfc4d1;
+  /* @theme resolves the swash at :root, so re-point it here too */
+  --color-swash: var(--color-accent);
+}
+
+/* ------------------------------------------------------------------
+   Product page art direction — atmosphere and motion only; type stays
+   in Jost, as on the MShape page.
+     NucleoSkin    — hairline orbits, lab dot-grid, aqua glow.
+     Pink Intimate — magenta haze.
+------------------------------------------------------------------- */
+
+/* Film grain over the whole page — atmosphere, never interaction. */
+.lp-grain {
+  position: relative;
+}
+.lp-grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+
+/* Lab dot-grid, faded out toward the edges. */
+.lp-dots {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--color-accent) 26%, transparent) 1px,
+    transparent 1.3px
+  );
+  background-size: 22px 22px;
+  mask-image: radial-gradient(ellipse 70% 65% at 70% 45%, #000, transparent 75%);
+}
+.lp-dots-light {
+  background-image: radial-gradient(rgb(255 255 255 / 0.16) 1px, transparent 1.3px);
+  background-size: 22px 22px;
+  mask-image: radial-gradient(ellipse 60% 70% at 80% 50%, #000, transparent 80%);
+}
+
+/* Soft colour glow behind a focal point. */
+.lp-glow {
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--color-brand-blue) 30%, transparent),
+    transparent
+  );
+  filter: blur(10px);
+}
+
+/* Hero entrance: one orchestrated, staggered rise on load. */
+@keyframes lp-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.lp-rise {
+  animation: lp-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.lp-d1 { animation-delay: 80ms; }
+.lp-d2 { animation-delay: 180ms; }
+.lp-d3 { animation-delay: 300ms; }
+.lp-d4 { animation-delay: 420ms; }
+.lp-d5 { animation-delay: 560ms; }
+
+/* Products drift gently; orbits turn slowly. */
+@keyframes lp-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.lp-float {
+  animation: lp-float 7s ease-in-out infinite;
+}
+@keyframes lp-spin {
+  to { transform: rotate(360deg); }
+}
+.lp-spin {
+  animation: lp-spin 48s linear infinite;
+}
+.lp-spin-rev {
+  animation: lp-spin 70s linear infinite reverse;
+}
+/* Bars grow in when their Reveal wrapper scrolls into view. */
+.lp-grow {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.35s;
+}
+.lp-grow-r {
+  transform-origin: right;
+}
+.reveal.is-visible .lp-grow {
+  transform: none;
+}
+
+/* Cards lift with a tinted glow — only where a real hover exists. */
+.lp-card {
+  transition:
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s ease;
+}
+@media (hover: hover) {
+  .lp-card:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--color-accent) 35%, transparent);
+    box-shadow: 0 24px 44px -26px color-mix(in srgb, var(--color-accent) 55%, transparent);
+  }
+}
+
 /* Reveal-on-scroll: hidden until IntersectionObserver adds .is-visible */
 .reveal {
   opacity: 0;

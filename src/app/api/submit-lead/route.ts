@@ -15,11 +15,16 @@ interface LeadInput {
   contouring?: string;
   /** You want: demo / pricing / ROI numbers / just looking */
   interest?: string;
+  /** "You are" on the product quote forms, e.g. Dermatologist. */
+  profession?: string;
+  /** Which product page the lead came from. */
+  product?: string;
   source?: string;
   pageUrl?: string;
   sheetTab?: string;
   telecrmPageName?: string;
   treatmentType?: string;
+  requestType?: string;
 }
 
 type LeadRouteConfig = {
@@ -27,6 +32,7 @@ type LeadRouteConfig = {
   sheetTab: string;
   telecrmPageName: string;
   treatmentType: string;
+  requestType: string;
 };
 
 const DEFAULT_ROUTE: LeadRouteConfig = {
@@ -34,6 +40,31 @@ const DEFAULT_ROUTE: LeadRouteConfig = {
   sheetTab: 'MShape Leads',
   telecrmPageName: 'nw-aesthetics-mshape',
   treatmentType: 'MShape Face & Body Contouring',
+  requestType: 'demo',
+};
+
+/**
+ * Product landing pages, keyed by the `product` value their form sends. Each
+ * carries its own "You are" options, so an answer from one page can't be
+ * replayed against another.
+ */
+const PRODUCT_ROUTES: Record<string, LeadRouteConfig & { professions: readonly string[] }> = {
+  nucleoskin: {
+    source: 'NW Aesthetics NucleoSkin LP',
+    sheetTab: 'NucleoSkin Leads',
+    telecrmPageName: 'nw-aesthetics-nucleoskin',
+    treatmentType: 'NucleoSkin PDRN Booster',
+    requestType: 'quote',
+    professions: ['Dermatologist', 'Aesthetic clinic owner', 'Other doctor'],
+  },
+  'pink-intimate': {
+    source: 'NW Aesthetics Pink Intimate LP',
+    sheetTab: 'Pink Intimate Leads',
+    telecrmPageName: 'nw-aesthetics-pink-intimate',
+    treatmentType: 'Pink Intimate Peel',
+    requestType: 'quote',
+    professions: ['Dermatologist', 'Gynaecologist', 'Plastic surgeon', 'Aesthetic clinic owner'],
+  },
 };
 
 /** The three qualifying questions, exactly as the form offers them. */
@@ -74,6 +105,8 @@ async function appendToGoogleSheet(data: LeadInput) {
     role: data.role || 'Not specified',
     contouring: data.contouring || 'Not specified',
     interest: data.interest || 'Not specified',
+    profession: data.profession || '',
+    product: data.treatmentType || DEFAULT_ROUTE.treatmentType,
     source: data.pageUrl || data.source || DEFAULT_ROUTE.source,
     sheetTab: data.sheetTab || DEFAULT_ROUTE.sheetTab,
   };
@@ -113,7 +146,7 @@ async function sendToTeleCRM(data: LeadInput) {
     name,
     phone,
     'Lead Status': 'new',
-    'Lead Request Type': 'demo',
+    'Lead Request Type': data.requestType || DEFAULT_ROUTE.requestType,
     'Treatment Type': treatmentType,
     Source: data.pageUrl || data.source || DEFAULT_ROUTE.source,
     PageName: data.telecrmPageName || DEFAULT_ROUTE.telecrmPageName,
@@ -126,6 +159,7 @@ async function sendToTeleCRM(data: LeadInput) {
   if (data.role) fields['Decision Maker'] = data.role;
   if (data.contouring) fields['Offers Contouring'] = data.contouring;
   if (data.interest) fields['Lead Interest'] = data.interest;
+  if (data.profession) fields['Profession'] = data.profession;
 
   const payload = {
     fields,
@@ -141,6 +175,9 @@ async function sendToTeleCRM(data: LeadInput) {
       { type: 'SYSTEM_NOTE', text: `Owner or decision-maker: ${data.role || 'Not specified'}` },
       { type: 'SYSTEM_NOTE', text: `Offers contouring now: ${data.contouring || 'Not specified'}` },
       { type: 'SYSTEM_NOTE', text: `Wants: ${data.interest || 'Not specified'}` },
+      ...(data.profession
+        ? [{ type: 'SYSTEM_NOTE', text: `You are: ${data.profession}` }]
+        : []),
       { type: 'SYSTEM_NOTE', text: 'Consent Given: Yes' },
     ],
   };
@@ -194,6 +231,8 @@ export async function POST(req: NextRequest) {
     role = '',
     contouring = '',
     interest = '',
+    profession = '',
+    product = '',
     pageUrl = '',
     company = '', // honeypot — real people never see this field
   } = body;
@@ -245,7 +284,21 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const routeConfig: LeadRouteConfig = DEFAULT_ROUTE;
+  const productRoute = product ? PRODUCT_ROUTES[product] : undefined;
+  if (product && !productRoute) {
+    return NextResponse.json({ error: 'Invalid selection.' }, { status: 400 });
+  }
+
+  if (productRoute) {
+    if (!profession) {
+      return NextResponse.json({ error: 'Please tell us who you are.' }, { status: 400 });
+    }
+    if (!productRoute.professions.includes(profession)) {
+      return NextResponse.json({ error: 'Invalid selection.' }, { status: 400 });
+    }
+  }
+
+  const routeConfig: LeadRouteConfig = productRoute ?? DEFAULT_ROUTE;
 
   const leadData: LeadInput = {
     name,
@@ -256,11 +309,14 @@ export async function POST(req: NextRequest) {
     role,
     contouring,
     interest,
+    profession: productRoute ? profession : '',
+    product,
     source: routeConfig.source,
     pageUrl: pageUrl.trim() || routeConfig.source,
     sheetTab: routeConfig.sheetTab,
     telecrmPageName: routeConfig.telecrmPageName,
     treatmentType: routeConfig.treatmentType,
+    requestType: routeConfig.requestType,
   };
 
   const [sheetResult, crmResult] = await Promise.allSettled([

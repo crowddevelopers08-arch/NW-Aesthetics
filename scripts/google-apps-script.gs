@@ -3,7 +3,11 @@
 
    Accepts lead payloads from `src/app/api/submit-lead/route.ts`:
      { timestamp, name, email, phone, clinic, city,
-       role, contouring, interest, source, sheetTab }
+       role, contouring, interest, profession, product, source, sheetTab }
+
+   `product` and `profession` come from the NucleoSkin and Pink Intimate
+   quote pages. An existing tab only fills the columns it has, so add
+   "Product" and "You Are" headers to it by hand (new tabs get them).
 
    Rows are written by header name instead of fixed column position, so the
    tab tolerates extra manual columns without breaking submissions.
@@ -28,9 +32,11 @@ var LEAD_HEADERS = [
   'Decision Maker',
   'Offers Contouring',
   'Wants',
+  'Product',
+  'You Are',
   'Source'
 ];
-var LEAD_WIDTHS = [170, 170, 220, 130, 190, 130, 140, 150, 140, 260];
+var LEAD_WIDTHS = [170, 170, 220, 130, 190, 130, 140, 150, 140, 200, 170, 260];
 
 var DEFAULT_TAB = 'MShape Leads';
 var DEFAULT_HEADER_COLOR = '#3b027a';
@@ -176,6 +182,8 @@ function appendLeadRow(sheet, data, ts) {
     'Decision Maker': data.role || '',
     'Offers Contouring': data.contouring || '',
     'Wants': data.interest || '',
+    'Product': data.product || '',
+    'You Are': data.profession || '',
     'Source': data.source || ''
   }, LEAD_HEADERS, DEFAULT_HEADER_COLOR);
 
