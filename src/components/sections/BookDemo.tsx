@@ -5,6 +5,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import GlassCard from "@/components/ui/GlassCard";
 import { Eyebrow, Swash } from "@/components/ui/Section";
 import Reveal from "@/components/ui/Reveal";
+import { trackSubmitApplication } from "@/lib/metaPixel";
 
 const CHOICES = [
   {
@@ -77,6 +78,7 @@ export default function BookDemo() {
       }
 
       form.reset();
+      trackSubmitApplication();
       router.push("/thank-you");
     } catch {
       setError(

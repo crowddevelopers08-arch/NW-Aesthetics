@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { Swash } from "@/components/ui/Section";
 import Reveal from "@/components/ui/Reveal";
+import { trackSubmitApplication } from "@/lib/metaPixel";
 import { CheckIcon } from "./QuoteStickyBar";
 
 const TEXT_FIELDS = [
@@ -89,6 +90,7 @@ export default function QuoteForm({
       }
 
       form.reset();
+      trackSubmitApplication();
       router.push(thankYouHref);
     } catch {
       setError(
