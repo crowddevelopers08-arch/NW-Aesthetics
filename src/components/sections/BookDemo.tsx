@@ -1,11 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import GlassCard from "@/components/ui/GlassCard";
 import { Eyebrow, Swash } from "@/components/ui/Section";
 import Reveal from "@/components/ui/Reveal";
-import { trackSubmitApplication } from "@/lib/metaPixel";
+import { goToThankYou } from "@/lib/metaPixel";
 
 const CHOICES = [
   {
@@ -39,14 +38,8 @@ const TEXT_FIELDS = [
 ] as const;
 
 export default function BookDemo() {
-  const router = useRouter();
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
-
-  // Load the thank-you page ahead of time, so the hand-off is instant.
-  useEffect(() => {
-    router.prefetch("/thank-you");
-  }, [router]);
 
   /**
    * Posts to /api/submit-lead, which fans the lead out to Google Sheets and
@@ -78,8 +71,7 @@ export default function BookDemo() {
       }
 
       form.reset();
-      trackSubmitApplication();
-      router.push("/thank-you");
+      goToThankYou("/thank-you");
     } catch {
       setError(
         "We couldn't reach our server. Check your connection and try again.",

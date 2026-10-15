@@ -3,6 +3,7 @@ import Nav from "@/components/sections/Nav";
 import Footer from "@/components/sections/Footer";
 import CTAButton from "@/components/ui/CTAButton";
 import { Eyebrow, Swash } from "@/components/ui/Section";
+import SubmitApplicationEvent from "@/components/ui/SubmitApplicationEvent";
 
 export const metadata: Metadata = {
   title: "Thank you — NW Aesthetics",
@@ -33,6 +34,7 @@ const NEXT_STEPS = [
 export default function ThankYouPage() {
   return (
     <>
+      <SubmitApplicationEvent />
       <Nav />
       <main>
         <section className="bg-surface px-4 pt-32 pb-14 sm:px-6 sm:pt-36 sm:pb-16 lg:flex lg:min-h-svh lg:items-center lg:px-8 lg:pb-20">

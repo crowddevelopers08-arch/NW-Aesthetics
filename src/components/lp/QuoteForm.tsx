@@ -1,10 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { useState, type FormEvent, type ReactNode } from "react";
 import { Swash } from "@/components/ui/Section";
 import Reveal from "@/components/ui/Reveal";
-import { trackSubmitApplication } from "@/lib/metaPixel";
+import { goToThankYou } from "@/lib/metaPixel";
 import { CheckIcon } from "./QuoteStickyBar";
 
 const TEXT_FIELDS = [
@@ -50,15 +49,8 @@ export default function QuoteForm({
   /** Visual column beside the form on desktop, above it on mobile. */
   aside: ReactNode;
 }) {
-  const router = useRouter();
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
-
-  // Load the thank-you page ahead of time, so the hand-off after a
-  // successful submit is instant.
-  useEffect(() => {
-    router.prefetch(thankYouHref);
-  }, [router, thankYouHref]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -90,8 +82,7 @@ export default function QuoteForm({
       }
 
       form.reset();
-      trackSubmitApplication();
-      router.push(thankYouHref);
+      goToThankYou(thankYouHref);
     } catch {
       setError(
         "We couldn't reach our server. Check your connection and try again.",

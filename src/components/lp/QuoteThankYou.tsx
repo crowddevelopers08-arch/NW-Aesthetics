@@ -1,5 +1,6 @@
 import CTAButton from "@/components/ui/CTAButton";
 import { Eyebrow, Swash } from "@/components/ui/Section";
+import SubmitApplicationEvent from "@/components/ui/SubmitApplicationEvent";
 
 type Step = { title: string; detail: string };
 
@@ -21,6 +22,7 @@ export default function QuoteThankYou({
 }) {
   return (
     <section className="bg-surface px-4 pt-28 pb-12 sm:px-6 sm:pt-36 sm:pb-16 lg:flex lg:min-h-svh lg:items-center lg:px-8 lg:pb-20">
+      <SubmitApplicationEvent />
       <div className="mx-auto w-full max-w-3xl text-center">
         <span className="lp-rise lp-d1 mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-accent sm:h-20 sm:w-20">
           <svg
