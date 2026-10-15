@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Section, { Heading } from "@/components/ui/Section";
 import Reveal from "@/components/ui/Reveal";
+import Carousel from "@/components/ui/Carousel";
 
 /** Named doctors — names only until headshots arrive. */
 const DOCTORS = ["Dr Rickson Pereira", "Dr Jaishree Sharad", "Dr Kiran Sethi"];
@@ -36,7 +37,7 @@ const RESULTS = [
 
 export default function NucleoProof() {
   return (
-    <Section id="proof">
+    <Section id="proof" dense>
       <Reveal className="text-center">
         <Heading className="mx-auto">
           500+ Doctors Didn&apos;t Switch by Accident.
@@ -45,7 +46,7 @@ export default function NucleoProof() {
 
       {/* ---------- face strip ---------- */}
       <Reveal delay={80}>
-        <ul className="mx-auto mt-8 flex max-w-4xl flex-wrap items-center justify-center gap-3 sm:mt-10">
+        <ul className="mx-auto mt-6 flex max-w-4xl flex-wrap items-center justify-center gap-3 sm:mt-10">
           {DOCTORS.map((name) => (
             <li
               key={name}
@@ -60,31 +61,49 @@ export default function NucleoProof() {
         </ul>
       </Reveal>
 
-      {/* ---------- before / after ---------- */}
-      <div className="mt-8 grid gap-4 sm:mt-10 lg:grid-cols-[1.84fr_1fr_1fr]">
+      {/* ---------- before / after ----------
+          Below `lg`: one result per swipe. From `lg`: the sized grid, which
+          needs a different width per card, so it stays a plain grid. */}
+      <Reveal delay={90} className="mt-6 sm:mt-10 lg:hidden">
+        <Carousel label="NucleoSkin results">
+          {RESULTS.map((r) => (
+            <ResultCard key={r.area} result={r} />
+          ))}
+        </Carousel>
+      </Reveal>
+
+      <div className="mt-10 hidden gap-4 lg:grid lg:grid-cols-[1.84fr_1fr_1fr]">
         {RESULTS.map((r, i) => (
           <Reveal key={r.area} delay={i * 90} className="min-w-0">
-            <figure className="lp-card overflow-hidden rounded-2xl border border-line bg-surface-alt">
-              <div className="relative">
-                <Image
-                  src={r.src}
-                  alt={r.alt}
-                  width={r.width}
-                  height={r.height}
-                  sizes="(min-width: 1024px) 480px, 92vw"
-                  className="h-auto w-full"
-                />
-                <span className="absolute top-3 left-3 rounded-full bg-accent px-3 py-1.5 text-[12px] font-extrabold tracking-[0.08em] text-white uppercase">
-                  After 3 sessions
-                </span>
-              </div>
-              <figcaption className="flex items-center justify-between px-4 py-3 text-[14px] font-extrabold text-ink-strong">
-                {r.area}
-              </figcaption>
-            </figure>
+            <ResultCard result={r} />
           </Reveal>
         ))}
       </div>
     </Section>
+  );
+}
+
+function ResultCard({ result: r }: { result: (typeof RESULTS)[number] }) {
+  return (
+    <figure className="lp-card flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface-alt">
+      {/* `flex-1` + centring: in the carousel the wide under-eye pair sits
+          mid-card beside the taller square pairs. */}
+      <div className="relative flex flex-1 items-center">
+        <Image
+          src={r.src}
+          alt={r.alt}
+          width={r.width}
+          height={r.height}
+          sizes="(min-width: 1024px) 480px, 92vw"
+          className="h-auto w-full"
+        />
+        <span className="absolute top-3 left-3 rounded-full bg-accent px-3 py-1.5 text-[12px] font-extrabold tracking-[0.08em] text-white uppercase">
+          After 3 sessions
+        </span>
+      </div>
+      <figcaption className="flex items-center justify-between px-4 py-3 text-[14px] font-extrabold text-ink-strong">
+        {r.area}
+      </figcaption>
+    </figure>
   );
 }

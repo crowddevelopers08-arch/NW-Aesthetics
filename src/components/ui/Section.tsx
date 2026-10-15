@@ -10,17 +10,20 @@ export default function Section({
   children,
   className = "",
   tone = "plain",
+  dense = false,
 }: {
   id?: string;
   children: ReactNode;
   className?: string;
   /** `plain` = white, `alt` = a warm off-white band. */
   tone?: "plain" | "alt";
+  /** Tighter top/bottom padding on phones. */
+  dense?: boolean;
 }) {
   return (
     <section
       id={id}
-      className={`relative scroll-mt-20 px-4 py-10 sm:px-6 sm:py-14 md:py-16 lg:px-8 lg:py-20 ${
+      className={`relative scroll-mt-20 px-4 ${dense ? "py-8" : "py-10"} sm:px-6 sm:py-14 md:py-16 lg:px-8 lg:py-20 ${
         tone === "alt" ? "bg-surface-alt" : "bg-surface"
       } ${className}`}
     >

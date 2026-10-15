@@ -23,7 +23,7 @@ const ROWS = [
 
 export default function NucleoNumbers() {
   return (
-    <Section id="numbers" tone="alt">
+    <Section id="numbers" tone="alt" dense>
       <Reveal className="max-w-3xl">
         <Eyebrow>The cost of saying &ldquo;we don&apos;t do PDRN&rdquo;</Eyebrow>
         <Heading>
@@ -36,7 +36,7 @@ export default function NucleoNumbers() {
         </Lede>
       </Reveal>
 
-      <div className="mt-8 grid gap-5 sm:mt-10 xl:grid-cols-[1.2fr_0.8fr] xl:gap-6">
+      <div className="mt-6 grid gap-5 sm:mt-10 xl:grid-cols-[1.2fr_0.8fr] xl:gap-6">
         {/* ---------- the ladder ---------- */}
         <Reveal className="min-w-0">
           <div className="h-full rounded-3xl border border-line bg-surface p-5 sm:p-7">
@@ -172,7 +172,7 @@ export default function NucleoNumbers() {
         </Reveal>
       </div>
 
-      <Reveal className="mt-8 flex flex-col items-center gap-3 text-center">
+      <Reveal className="mt-6 flex flex-col sm:mt-8 items-center gap-3 text-center">
         <CTAButton href="#quote">Get the Numbers for My Clinic</CTAButton>
         {SHOW_SCARCITY && (
           <p className="max-w-md text-[14px] font-semibold text-ink-soft">

@@ -18,14 +18,14 @@ const FAILURES = [
 
 export default function NucleoProblem() {
   return (
-    <Section id="problem" tone="alt">
+    <Section id="problem" tone="alt" dense>
       <Reveal className="mx-auto max-w-3xl text-center">
         <Heading className="mx-auto">
           Plain PDRN Takes Months to Show. Your Patients Won&apos;t Wait.
         </Heading>
       </Reveal>
 
-      <div className="mx-auto mt-8 grid max-w-4xl gap-4 sm:mt-10 sm:grid-cols-2 sm:gap-5">
+      <div className="mx-auto mt-6 grid max-w-4xl gap-4 sm:mt-10 sm:grid-cols-2 sm:gap-5">
         {FAILURES.map((f, i) => (
           <Reveal key={f.icon} delay={i * 100}>
             <article className="lp-card h-full rounded-2xl border border-line bg-surface p-6 sm:p-7">

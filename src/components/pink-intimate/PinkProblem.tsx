@@ -9,9 +9,9 @@ export default function PinkProblem() {
   return (
     <section
       id="problem"
-      className="relative scroll-mt-20 overflow-hidden bg-accent-deep px-4 py-12 text-white sm:px-6 sm:py-16 lg:px-8 lg:py-20"
+      className="relative scroll-mt-20 overflow-hidden bg-accent-deep px-4 py-8 text-white sm:px-6 sm:py-16 lg:px-8 lg:py-20"
     >
-      <div className="relative mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-2 lg:gap-14">
+      <div className="relative mx-auto grid w-full max-w-6xl gap-6 sm:gap-8 lg:grid-cols-2 lg:gap-14">
         <Reveal className="min-w-0">
           <h2 className="relative w-fit pb-4 text-[clamp(1.75rem,5.2vw,3rem)] leading-[1.08] font-extrabold tracking-[-0.02em] text-balance sm:pb-6 [&>svg]:text-brand-blue">
             Almost Every Patient Has This Concern. Almost None Will Bring It Up.
@@ -27,7 +27,7 @@ export default function PinkProblem() {
             clinic that clearly offers it.
           </p>
 
-          <blockquote className="mt-7 border-l-4 border-brand-blue pl-5 text-[clamp(1.2rem,3vw,1.6rem)] leading-snug font-extrabold text-balance">
+          <blockquote className="mt-5 border-l-4 sm:mt-7 border-brand-blue pl-5 text-[clamp(1.2rem,3vw,1.6rem)] leading-snug font-extrabold text-balance">
             If yours doesn&apos;t, you never even hear about the patient you
             lost.
           </blockquote>

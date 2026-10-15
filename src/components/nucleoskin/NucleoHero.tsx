@@ -7,7 +7,7 @@ export default function NucleoHero() {
   return (
     <section
       id="top"
-      className="relative flex min-h-svh flex-col justify-center overflow-hidden bg-surface px-4 pt-[calc(4rem+2svh)] pb-[1.5svh] sm:px-6 sm:pb-[3svh] lg:min-h-[600px] lg:h-svh lg:px-8 lg:pt-[calc(4.5rem+2svh)]"
+      className="relative flex flex-col justify-center overflow-hidden bg-surface px-4 pt-20 pb-10 sm:min-h-svh sm:px-6 sm:pt-[calc(4rem+2svh)] sm:pb-[3svh] lg:min-h-[600px] lg:h-svh lg:px-8 lg:pt-[calc(4.5rem+2svh)]"
     >
       {/* atmosphere: lab dot-grid and an aqua glow behind the product */}
       <div aria-hidden="true" className="lp-dots pointer-events-none absolute inset-0" />
@@ -18,9 +18,11 @@ export default function NucleoHero() {
 
       {/* Everything is sized off the viewport height (svh), so the hero
           fills exactly one screen on phones and laptops alike. */}
-      <div className="relative mx-auto grid w-full max-w-6xl items-center gap-[2.5svh] lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
+      {/* On phones the stack reads copy → product → CTA; on desktop the
+          copy halves share the left column and the product spans the right. */}
+      <div className="relative mx-auto grid w-full max-w-6xl items-center gap-6 sm:gap-[2.5svh] lg:grid-cols-[1.05fr_0.95fr] lg:gap-x-12 lg:gap-y-0">
         {/* ---------- copy ---------- */}
-        <div className="min-w-0">
+        <div className="min-w-0 lg:col-start-1 lg:row-start-1 lg:self-end">
           {/* Two tidy rows instead of one wrapping pill: origin tags, then
               the audience as its own badge, so no separator is left dangling. */}
           <div className="lp-rise lp-d1 flex flex-col items-start gap-2">
@@ -58,13 +60,13 @@ export default function NucleoHero() {
             </p>
           </div>
 
-          <h1 className="lp-rise lp-d2 relative mt-[2svh] w-fit pb-[1.6svh] text-[clamp(1.6rem,min(8vw,4.6svh),2.6rem)] leading-[1.05] lg:pb-5 lg:text-[clamp(2.2rem,min(4.6vw,7.2svh),3.9rem)] font-extrabold tracking-[-0.03em] text-balance text-ink-strong sm:pb-6">
+          <h1 className="lp-rise lp-d2 relative mt-4 w-fit pb-4 text-[clamp(2rem,7.2vw,2.6rem)] leading-[1.05] sm:mt-[2svh] sm:text-[clamp(1.6rem,min(8vw,4.6svh),2.6rem)] lg:pb-5 lg:text-[clamp(2.2rem,min(4.6vw,7.2svh),3.9rem)] font-extrabold tracking-[-0.03em] text-balance text-ink-strong sm:pb-6">
             Your Patients Already Want PDRN.{" "}
             <span className="text-accent">Give Them the Best One.</span>
             <Swash />
           </h1>
 
-          <p className="lp-rise lp-d3 mt-[2svh] max-w-xl text-[clamp(0.9rem,min(4vw,2.1svh),1.18rem)] leading-relaxed font-medium text-pretty text-ink-soft">
+          <p className="lp-rise lp-d3 mt-4 max-w-xl text-[1rem] sm:mt-[2svh] sm:text-[clamp(0.9rem,min(4vw,2.1svh),1.18rem)] leading-relaxed font-medium text-pretty text-ink-soft">
             NucleoSkin combines PDRN, Hyaluronic Acid and Glutathione in one 3
             ml vial. Clinics charge up to{" "}
             <strong className="font-extrabold text-ink-strong">
@@ -72,8 +74,11 @@ export default function NucleoHero() {
             </strong>
             . Used by 500+ doctors across India.
           </p>
+        </div>
 
-          <div className="lp-rise lp-d4 mt-[2.6svh] flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-5">
+        {/* ---------- CTA ---------- */}
+        <div className="min-w-0 lg:col-start-1 lg:row-start-2 lg:self-start">
+          <div className="lp-rise lp-d4 flex lg:mt-[2.6svh] flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-5">
             <CTAButton href="#quote">Get the Quote &amp; Protocol</CTAButton>
             <span className="flex items-center gap-1.5 text-[14px] font-bold text-ink-soft">
               <CheckIcon />
@@ -85,7 +90,7 @@ export default function NucleoHero() {
         {/* ---------- product ----------
             A square stage sized off the viewport height, so the disc stays
             a true circle and the hero still fits one screen. */}
-        <div className="lp-rise lp-d3 relative mx-auto aspect-square w-[min(31svh,100%)] min-w-0 sm:w-[min(42svh,100%)] lg:w-[min(70svh,640px,100%)]">
+        <div className="lp-rise lp-d3 relative row-start-2 mx-auto aspect-square lg:col-start-2 lg:row-span-2 lg:row-start-1 w-[min(88vw,440px)] min-w-0 lg:w-[min(72svh,640px,100%)]">
           {/* flat teal disc behind the cut-out pack */}
           <div
             aria-hidden="true"
@@ -115,8 +120,8 @@ export default function NucleoHero() {
             width={1025}
             height={1108}
             priority
-            sizes="(min-width: 1024px) 640px, 42vh"
-            className="lp-float absolute inset-[17%] h-[66%] w-[66%] object-contain drop-shadow-[0_30px_40px_rgba(7,78,76,0.22)]"
+            sizes="(min-width: 1024px) 640px, 88vw"
+            className="lp-float absolute inset-[12%] h-[76%] w-[76%] object-contain drop-shadow-[0_30px_40px_rgba(7,78,76,0.22)]"
           />
         </div>
       </div>

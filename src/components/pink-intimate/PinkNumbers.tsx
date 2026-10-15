@@ -27,8 +27,8 @@ export default function PinkNumbers() {
   const showCost = BOX_PRICE !== null;
 
   return (
-    <Section id="numbers">
-      <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-end lg:gap-14">
+    <Section id="numbers" dense>
+      <div className="grid gap-4 sm:gap-8 lg:grid-cols-[1fr_1fr] lg:items-end lg:gap-14">
         <Reveal className="min-w-0">
           <Eyebrow>The cost of saying &ldquo;we don&apos;t treat that&rdquo;</Eyebrow>
           <Heading>
@@ -46,7 +46,7 @@ export default function PinkNumbers() {
       </div>
 
       {/* ---------- the callout ---------- */}
-      <Reveal className="mt-8 sm:mt-10">
+      <Reveal className="mt-6 sm:mt-10">
         <div className="relative grid overflow-hidden rounded-3xl bg-accent-deep text-white shadow-[0_40px_80px_-44px_rgba(125,0,67,0.75)] lg:grid-cols-[1.1fr_0.9fr]">
           <div className="relative p-6 sm:p-8 lg:p-10">
             <p className="text-[clamp(2.4rem,12vw,5.5rem)] leading-none font-extrabold tracking-[-0.03em] whitespace-nowrap text-white">
@@ -171,7 +171,7 @@ export default function PinkNumbers() {
         </div>
       </Reveal>
 
-      <Reveal className="mt-8 flex justify-center">
+      <Reveal className="mt-6 flex justify-center sm:mt-8">
         <CTAButton href="#quote">Get the Numbers for My Clinic</CTAButton>
       </Reveal>
     </Section>

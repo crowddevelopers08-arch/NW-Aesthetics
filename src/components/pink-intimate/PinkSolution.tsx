@@ -29,7 +29,7 @@ const SPECS = [
 
 export default function PinkSolution() {
   return (
-    <Section id="solution">
+    <Section id="solution" dense>
       <Reveal className="text-center">
         <Heading className="mx-auto">A Peel Made Only for Intimate Skin.</Heading>
       </Reveal>
@@ -37,7 +37,7 @@ export default function PinkSolution() {
       {/* The brand reel sits here because it makes this section's point —
           lifting, brightening and rejuvenating for intimate areas — and a
           vertical video in the hero would break its one-screen fit. */}
-      <div className="mt-8 grid items-center gap-8 sm:mt-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-12">
+      <div className="mt-6 grid items-center gap-6 sm:mt-10 sm:gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-12">
         <Reveal className="min-w-0">
           <PinkReel />
         </Reveal>

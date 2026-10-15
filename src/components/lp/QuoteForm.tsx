@@ -95,9 +95,9 @@ export default function QuoteForm({
   return (
     <section
       id="quote"
-      className="scroll-mt-20 overflow-hidden bg-surface-alt px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20"
+      className="scroll-mt-20 overflow-hidden bg-surface-alt px-4 py-8 sm:px-6 sm:py-16 lg:px-8 lg:py-20"
     >
-      <div className="mx-auto grid w-full max-w-6xl items-center gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-12">
+      <div className="mx-auto grid w-full max-w-6xl items-center gap-6 sm:gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-12">
         <Reveal className="min-w-0">{aside}</Reveal>
 
         <Reveal delay={120} className="relative min-w-0">

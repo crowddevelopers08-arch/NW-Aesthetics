@@ -11,10 +11,13 @@ import CTAButton from "@/components/ui/CTAButton";
 export default function LpNav({
   ctaLabel,
   ctaHref = "#quote",
+  mobileCtaLabel = "Get Quote",
 }: {
   /** Omitted on the thank-you pages, which show the logo alone. */
   ctaLabel?: string;
   ctaHref?: string;
+  /** Shorter label for phones, so the button fits beside the logo. */
+  mobileCtaLabel?: string;
 }) {
   const [scrolled, setScrolled] = useState(false);
 
@@ -34,14 +37,14 @@ export default function LpNav({
       <nav className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
         <Logo className="h-9 w-auto sm:h-10" />
 
-        {/* Phones get the sticky bottom bar instead, so the name has room. */}
         {ctaLabel && (
-        <span className="hidden shrink-0 sm:block">
+        <span className="shrink-0">
           <CTAButton
             href={ctaHref}
-            className="px-5 py-3 text-[13px] sm:px-6 sm:py-3 sm:text-[13px]"
+            className="px-4 py-2.5 text-[13px] whitespace-nowrap sm:px-6 sm:py-3 sm:text-[13px]"
           >
-            {ctaLabel}
+            <span className="sm:hidden">{mobileCtaLabel}</span>
+            <span className="hidden sm:inline">{ctaLabel}</span>
           </CTAButton>
         </span>
         )}

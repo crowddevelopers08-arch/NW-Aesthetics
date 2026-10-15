@@ -11,7 +11,7 @@ export default function LpFooter({
   privacyHref: string;
 }) {
   return (
-    <footer className="border-t border-line bg-surface-alt px-4 pt-8 pb-24 sm:px-6 sm:py-10 lg:px-8">
+    <footer className="border-t border-line bg-surface-alt px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
       <div className="mx-auto flex w-full max-w-6xl flex-col items-start gap-3 min-[400px]:flex-row min-[400px]:items-center min-[400px]:justify-between">
         <Logo />
         <a

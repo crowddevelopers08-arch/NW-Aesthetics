@@ -33,7 +33,7 @@ const REASONS = [
 /** Bento grid: the first reason, the core insight, gets the tall dark tile. */
 export default function PinkReasons() {
   return (
-    <Section id="why" tone="alt">
+    <Section id="why" tone="alt" dense>
       <Reveal className="max-w-2xl">
         <Heading>
           6 Reasons Clinics Are Adding{" "}
@@ -41,7 +41,7 @@ export default function PinkReasons() {
         </Heading>
       </Reveal>
 
-      <ol className="mt-8 grid gap-3 sm:mt-10 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+      <ol className="mt-6 grid gap-3 sm:mt-10 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
         {REASONS.map((r, i) => {
           const lead = i === 0;
           // 06 runs the full width, which closes the grid around the
@@ -96,7 +96,7 @@ export default function PinkReasons() {
         })}
       </ol>
 
-      <Reveal className="mt-8 flex flex-col items-center gap-3 text-center">
+      <Reveal className="mt-6 flex flex-col sm:mt-8 items-center gap-3 text-center">
         <CTAButton href="#quote">Get the Quote &amp; Protocol</CTAButton>
         <p className="flex items-center gap-1.5 text-[14px] font-bold text-ink-soft">
           <CheckIcon />

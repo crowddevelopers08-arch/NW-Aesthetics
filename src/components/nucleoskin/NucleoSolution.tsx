@@ -28,7 +28,7 @@ export default function NucleoSolution() {
   return (
     <section
       id="solution"
-      className="relative scroll-mt-20 overflow-hidden bg-accent-deep px-4 py-12 text-white sm:px-6 sm:py-16 lg:px-8 lg:py-20"
+      className="relative scroll-mt-20 overflow-hidden bg-accent-deep px-4 py-8 text-white sm:px-6 sm:py-16 lg:px-8 lg:py-20"
     >
       {/* atmosphere: faint dot-grid and an aqua glow under the photo */}
       <div aria-hidden="true" className="lp-dots-light pointer-events-none absolute inset-0" />
@@ -37,8 +37,17 @@ export default function NucleoSolution() {
         className="lp-glow pointer-events-none absolute top-[5%] right-[-10%] h-[90%] w-[60%] opacity-70"
       />
 
-      <div className="relative mx-auto grid w-full max-w-6xl items-center gap-8 lg:grid-cols-2 lg:gap-14">
-        <Reveal className="min-w-0 lg:order-2">
+      {/* Stacked: heading → photo → cards. From `lg` the heading and cards
+          share the left column and the photo spans both rows on the right. */}
+      <div className="relative mx-auto grid w-full max-w-6xl items-center gap-6 sm:gap-8 lg:grid-cols-2 lg:gap-x-14 lg:gap-y-0">
+        <Reveal className="min-w-0 lg:col-start-1 lg:row-start-1 lg:self-end">
+          <h2 className="relative w-fit pb-4 text-[clamp(1.75rem,5.2vw,3rem)] leading-[1.08] font-extrabold tracking-[-0.02em] text-balance sm:pb-6 [&>svg]:text-brand-blue">
+            Regenerate. Hydrate. Brighten. One Injection.
+            <Swash />
+          </h2>
+        </Reveal>
+
+        <Reveal className="min-w-0 lg:col-start-2 lg:row-span-2 lg:row-start-1">
           <div className="relative overflow-hidden rounded-3xl ring-1 ring-white/15 shadow-[0_40px_80px_-40px_rgba(46,196,182,0.55)]">
             <Image
               src="/images/nucleoskin/vial-in-hand.jpg"
@@ -51,15 +60,8 @@ export default function NucleoSolution() {
           </div>
         </Reveal>
 
-        <div className="min-w-0 lg:order-1">
-          <Reveal>
-            <h2 className="relative w-fit pb-4 text-[clamp(1.75rem,5.2vw,3rem)] leading-[1.08] font-extrabold tracking-[-0.02em] text-balance sm:pb-6 [&>svg]:text-brand-blue">
-              Regenerate. Hydrate. Brighten. One Injection.
-              <Swash />
-            </h2>
-          </Reveal>
-
-          <div className="mt-7 grid gap-3 sm:mt-9">
+        <div className="min-w-0 lg:col-start-1 lg:row-start-2 lg:self-start">
+          <div className="grid gap-3 lg:mt-9">
             {ACTIVES.map((a, i) => (
               <Reveal key={a.name} delay={i * 90}>
                 <div className="flex items-center gap-4 rounded-2xl border border-white/15 bg-white/[0.06] p-4 backdrop-blur-sm transition-colors duration-300 hover:border-brand-blue/60 hover:bg-white/[0.1] sm:gap-5 sm:p-5">

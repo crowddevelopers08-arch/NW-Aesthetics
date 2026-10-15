@@ -39,9 +39,9 @@ export default function NucleoReasons() {
   return (
     <section
       id="why"
-      className="scroll-mt-20 bg-surface px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20"
+      className="scroll-mt-20 bg-surface px-4 py-8 sm:px-6 sm:py-16 lg:px-8 lg:py-20"
     >
-      <div className="mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14">
+      <div className="mx-auto grid w-full max-w-6xl gap-6 sm:gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14">
         <div className="min-w-0 lg:sticky lg:top-24 lg:self-start">
           <Reveal>
             <Heading>
