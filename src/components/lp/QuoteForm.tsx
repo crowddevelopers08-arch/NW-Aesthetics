@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { Swash } from "@/components/ui/Section";
 import Reveal from "@/components/ui/Reveal";
 import { CheckIcon } from "./QuoteStickyBar";
@@ -52,6 +52,12 @@ export default function QuoteForm({
   const router = useRouter();
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
+
+  // Load the thank-you page ahead of time, so the hand-off after a
+  // successful submit is instant.
+  useEffect(() => {
+    router.prefetch(thankYouHref);
+  }, [router, thankYouHref]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

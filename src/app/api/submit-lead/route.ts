@@ -1,7 +1,7 @@
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-import { NextRequest, NextResponse } from 'next/server';
+import { after, NextRequest, NextResponse } from 'next/server';
 
 interface LeadInput {
   name: string;
@@ -116,6 +116,8 @@ async function appendToGoogleSheet(data: LeadInput) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
     cache: 'no-store',
+    // Cap a hung Apps Script, so a TeleCRM failure can't stall the reply.
+    signal: AbortSignal.timeout(12000),
   });
 
   const text = await res.text();
@@ -130,7 +132,7 @@ async function sendToTeleCRM(data: LeadInput) {
   if (!process.env.TELECRM_API_KEY) throw new Error('TELECRM_API_KEY is not set');
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 15000);
+  const timeout = setTimeout(() => controller.abort(), 10000);
 
   const name = data.name.trim();
   const email = data.email?.trim() || '';
@@ -161,23 +163,34 @@ async function sendToTeleCRM(data: LeadInput) {
   if (data.interest) fields['Lead Interest'] = data.interest;
   if (data.profession) fields['Profession'] = data.profession;
 
+  // Product pages ask "You are" instead of the three MShape questions, so
+  // each lead only carries the notes its own form actually collected.
+  const isProductLead = Boolean(data.product);
+  const formNotes = isProductLead
+    ? [{ type: 'SYSTEM_NOTE', text: `You are: ${data.profession || 'Not specified'}` }]
+    : [
+        { type: 'SYSTEM_NOTE', text: `Owner or decision-maker: ${data.role || 'Not specified'}` },
+        { type: 'SYSTEM_NOTE', text: `Offers contouring now: ${data.contouring || 'Not specified'}` },
+        { type: 'SYSTEM_NOTE', text: `Wants: ${data.interest || 'Not specified'}` },
+      ];
+
   const payload = {
     fields,
     actions: [
       { type: 'SYSTEM_NOTE', text: `Lead Source: ${fields.Source}` },
       { type: 'SYSTEM_NOTE', text: `Landing Page: ${data.source || DEFAULT_ROUTE.source}` },
-      { type: 'SYSTEM_NOTE', text: `Machine: ${treatmentType}` },
+      { type: 'SYSTEM_NOTE', text: `${isProductLead ? 'Product' : 'Machine'}: ${treatmentType}` },
+      ...(isProductLead
+        ? [{ type: 'SYSTEM_NOTE', text: `Request: ${data.requestType || 'quote'} & protocol` }]
+        : []),
       { type: 'SYSTEM_NOTE', text: `Name: ${name}` },
       { type: 'SYSTEM_NOTE', text: `Phone: ${phone}` },
-      { type: 'SYSTEM_NOTE', text: `Email: ${email || 'Not provided'}` },
+      ...(isProductLead
+        ? []
+        : [{ type: 'SYSTEM_NOTE', text: `Email: ${email || 'Not provided'}` }]),
       { type: 'SYSTEM_NOTE', text: `Clinic: ${clinic || 'Not provided'}` },
       { type: 'SYSTEM_NOTE', text: `City: ${city || 'Not provided'}` },
-      { type: 'SYSTEM_NOTE', text: `Owner or decision-maker: ${data.role || 'Not specified'}` },
-      { type: 'SYSTEM_NOTE', text: `Offers contouring now: ${data.contouring || 'Not specified'}` },
-      { type: 'SYSTEM_NOTE', text: `Wants: ${data.interest || 'Not specified'}` },
-      ...(data.profession
-        ? [{ type: 'SYSTEM_NOTE', text: `You are: ${data.profession}` }]
-        : []),
+      ...formNotes,
       { type: 'SYSTEM_NOTE', text: 'Consent Given: Yes' },
     ],
   };
@@ -319,32 +332,38 @@ export async function POST(req: NextRequest) {
     requestType: routeConfig.requestType,
   };
 
-  const [sheetResult, crmResult] = await Promise.allSettled([
-    appendToGoogleSheet(leadData),
-    sendToTeleCRM(leadData),
-  ]);
+  const sheet = appendToGoogleSheet(leadData).catch((err: Error) => {
+    console.error('[Google Sheets] Error:', err?.message);
+    throw err;
+  });
+  const crm = sendToTeleCRM(leadData).catch((err: Error) => {
+    console.error('[TeleCRM] Error:', err?.message);
+    throw err;
+  });
 
-  if (sheetResult.status === 'rejected') {
-    console.error('[Google Sheets] Error:', sheetResult.reason?.message);
-  }
-  if (crmResult.status === 'rejected') {
-    console.error('[TeleCRM] Error:', crmResult.reason?.message);
-  }
+  // Answer as soon as the lead is safe in either destination — the slower
+  // one (usually Apps Script) finishes after the response via `after()`, so
+  // the visitor isn't kept waiting on both.
+  const saved = await Promise.any([
+    sheet.then(() => 'sheet' as const),
+    crm.then(() => 'crm' as const),
+  ]).catch(() => null);
 
   // Both destinations failing means the lead is lost — say so, so the visitor
   // can call instead of assuming we have their number.
-  if (sheetResult.status === 'rejected' && crmResult.status === 'rejected') {
+  if (!saved) {
     return NextResponse.json(
       { error: 'We could not save your request. Please call or WhatsApp us instead.' },
       { status: 502 }
     );
   }
 
+  after(() => Promise.allSettled([sheet, crm]));
+
   return NextResponse.json(
     {
       success: true,
-      sheet: sheetResult.status === 'fulfilled' ? 'ok' : 'failed',
-      crm: crmResult.status === 'fulfilled' ? 'ok' : 'failed',
+      savedTo: saved,
       route: routeConfig.sheetTab,
       timestamp: new Date().toISOString(),
     },

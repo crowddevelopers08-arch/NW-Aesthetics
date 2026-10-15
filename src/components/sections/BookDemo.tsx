@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import GlassCard from "@/components/ui/GlassCard";
 import { Eyebrow, Swash } from "@/components/ui/Section";
 import Reveal from "@/components/ui/Reveal";
@@ -41,6 +41,11 @@ export default function BookDemo() {
   const router = useRouter();
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
+
+  // Load the thank-you page ahead of time, so the hand-off is instant.
+  useEffect(() => {
+    router.prefetch("/thank-you");
+  }, [router]);
 
   /**
    * Posts to /api/submit-lead, which fans the lead out to Google Sheets and
