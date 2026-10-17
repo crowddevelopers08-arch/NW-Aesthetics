@@ -9,13 +9,16 @@ const DOCTORS = [
   "Dr Geeta Patel",
   "Dr Amit Luthra",
   "Dr Jenny Mathew",
+  "Dr Niti Gaur",
+  "Bodycraft Clinics",
+  "Dr Indu Ballan",
 ];
 
 /**
  * How many doctors use Pink Intimate, for "and [X]+ more". While it is
  * null that tile is left out rather than printing an unconfirmed number.
  */
-const DOCTOR_COUNT: number | null = null;
+const DOCTOR_COUNT: number | null = 100;
 
 /**
  * Underarm only on the public page — intimate-area results stay in the
@@ -65,17 +68,19 @@ export default function PinkProof() {
 
       {/* ---------- face strip ---------- */}
       <Reveal delay={80}>
-        <ul className="mt-5 flex flex-wrap gap-3 sm:mt-9">
+        {/* One row: fits the column on desktop, swipes sideways on smaller
+            screens instead of wrapping. */}
+        <ul className="mt-5 flex gap-2 overflow-x-auto [scrollbar-width:none] sm:mt-9[&::-webkit-scrollbar]:hidden">
           {DOCTORS.map((name) => (
             <li
               key={name}
-              className="rounded-full border border-line bg-surface px-5 py-3 text-[15px] font-extrabold text-ink-strong"
+              className="shrink-0 rounded-full border border-line bg-surface px-4 py-2.5 text-[14px] font-extrabold whitespace-nowrap text-ink-strong"
             >
               {name}
             </li>
           ))}
           {DOCTOR_COUNT !== null && (
-            <li className="rounded-full bg-accent px-5 py-3 text-[15px] font-extrabold text-white">
+            <li className="shrink-0 rounded-full bg-accent px-4 py-2.5 text-[14px] font-extrabold whitespace-nowrap text-white">
               and {DOCTOR_COUNT}+ more
             </li>
           )}
