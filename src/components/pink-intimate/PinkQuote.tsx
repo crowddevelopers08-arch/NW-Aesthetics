@@ -20,7 +20,7 @@ export default function PinkQuote() {
       ]}
       buttonLabel="Get the Quote & Protocol"
       footnote="Training included. For doctors and clinics only."
-      thankYouHref="/pink-intimate/thank-you"
+      thankYouHref="/pink-intimate/thankyou"
       aside={
         <div className="overflow-hidden rounded-3xl border border-line bg-white">
           <Image
