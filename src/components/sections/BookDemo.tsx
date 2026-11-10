@@ -5,29 +5,11 @@ import GlassCard from "@/components/ui/GlassCard";
 import { Eyebrow, Swash } from "@/components/ui/Section";
 import Reveal from "@/components/ui/Reveal";
 import { goToThankYou } from "@/lib/metaPixel";
-
-const CHOICES = [
-  {
-    name: "role",
-    label: "Are you the owner or decision-maker?",
-    options: ["Owner", "Shared", "No"],
-  },
-  {
-    name: "contouring",
-    label: "Do you offer body or face contouring now?",
-    options: ["Yes", "No", "Planning to"],
-  },
-  {
-    name: "interest",
-    label: "You want:",
-    options: ["Demo", "Pricing", "ROI numbers", "Just looking"],
-  },
-] as const;
+import { savePrefill } from "@/components/ui/CalendlyInline";
 
 const TEXT_FIELDS = [
   { name: "name", label: "Name", type: "text", autoComplete: "name" },
   { name: "phone", label: "Phone / WhatsApp", type: "tel", autoComplete: "tel" },
-  { name: "email", label: "Email", type: "email", autoComplete: "email" },
   {
     name: "clinic",
     label: "Clinic name",
@@ -43,7 +25,7 @@ export default function BookDemo() {
 
   /**
    * Posts to /api/submit-lead, which fans the lead out to Google Sheets and
-   * TeleCRM, then hands the visitor to /thank-you.
+   * TeleCRM, then hands the visitor to /book-slot to pick a Calendly time.
    */
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -70,8 +52,14 @@ export default function BookDemo() {
         return;
       }
 
+      savePrefill({
+        name: String(values.name ?? ""),
+        phone: String(values.phone ?? ""),
+        clinic: String(values.clinic ?? ""),
+        city: String(values.city ?? ""),
+      });
       form.reset();
-      goToThankYou("/thank-you");
+      goToThankYou("/book-slot");
     } catch {
       setError(
         "We couldn't reach our server. Check your connection and try again.",
@@ -116,15 +104,9 @@ export default function BookDemo() {
                 />
               </div>
 
-              {/* Two columns on desktop — details left, questions right —
-                    so the whole form lands inside one screen. */}
-                <div className="grid gap-5 lg:grid-cols-2 lg:gap-8">
-                  <div className="grid content-start gap-3 sm:grid-cols-2">
-                    {TEXT_FIELDS.map((field, i) => (
-                      <div
-                        key={field.name}
-                        className={i === 4 ? "sm:col-span-2" : undefined}
-                      >
+              <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
+                    {TEXT_FIELDS.map((field) => (
+                      <div key={field.name}>
                         <label
                           htmlFor={field.name}
                           className="block text-[11px] font-extrabold tracking-[0.14em] text-ink-faint uppercase"
@@ -142,37 +124,7 @@ export default function BookDemo() {
                         />
                       </div>
                     ))}
-                  </div>
-
-                  <div className="grid content-start gap-4">
-                    {CHOICES.map((group) => (
-                      <fieldset key={group.name}>
-                        <legend className="text-[11px] font-extrabold tracking-[0.14em] text-ink-faint uppercase">
-                          {group.label}
-                        </legend>
-                        <div className="mt-2 flex flex-wrap gap-2">
-                          {group.options.map((option) => (
-                            <label
-                              key={option}
-                              className="group cursor-pointer select-none"
-                            >
-                              <input
-                                type="radio"
-                                name={group.name}
-                                value={option}
-                                required
-                                className="peer sr-only"
-                              />
-                              <span className="block rounded-full border-2 border-line bg-surface px-3.5 py-2 text-[14px] font-bold text-ink-soft transition-colors duration-200 group-hover:border-line-strong peer-checked:border-accent peer-checked:bg-accent peer-checked:text-white peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent">
-                                {option}
-                              </span>
-                            </label>
-                          ))}
-                        </div>
-                      </fieldset>
-                    ))}
-                  </div>
-                </div>
+              </div>
 
               {error && (
                 <p

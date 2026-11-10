@@ -163,16 +163,12 @@ async function sendToTeleCRM(data: LeadInput) {
   if (data.interest) fields['Lead Interest'] = data.interest;
   if (data.profession) fields['Profession'] = data.profession;
 
-  // Product pages ask "You are" instead of the three MShape questions, so
-  // each lead only carries the notes its own form actually collected.
+  // Product pages ask "You are"; the MShape demo form asks only for contact
+  // details, so each lead only carries the notes its own form collected.
   const isProductLead = Boolean(data.product);
   const formNotes = isProductLead
     ? [{ type: 'SYSTEM_NOTE', text: `You are: ${data.profession || 'Not specified'}` }]
-    : [
-        { type: 'SYSTEM_NOTE', text: `Owner or decision-maker: ${data.role || 'Not specified'}` },
-        { type: 'SYSTEM_NOTE', text: `Offers contouring now: ${data.contouring || 'Not specified'}` },
-        { type: 'SYSTEM_NOTE', text: `Wants: ${data.interest || 'Not specified'}` },
-      ];
+    : [];
 
   const payload = {
     fields,
@@ -185,9 +181,6 @@ async function sendToTeleCRM(data: LeadInput) {
         : []),
       { type: 'SYSTEM_NOTE', text: `Name: ${name}` },
       { type: 'SYSTEM_NOTE', text: `Phone: ${phone}` },
-      ...(isProductLead
-        ? []
-        : [{ type: 'SYSTEM_NOTE', text: `Email: ${email || 'Not provided'}` }]),
       { type: 'SYSTEM_NOTE', text: `Clinic: ${clinic || 'Not provided'}` },
       { type: 'SYSTEM_NOTE', text: `City: ${city || 'Not provided'}` },
       ...formNotes,
