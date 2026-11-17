@@ -49,6 +49,21 @@ export default function RootLayout({
   return (
     <html lang="en" className={jost.variable}>
       <body className="antialiased">
+        {/* Google Tag Manager */}
+        <Script
+          id="gtm-loader"
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtm.js?id=GTM-5XF9SSNP"
+        />
+        <Script id="gtm-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+          `}
+        </Script>
+        {/* End Google Tag Manager */}
+
         {/* Meta Pixel Code */}
         <Script id="meta-pixel" strategy="afterInteractive">
           {`
