@@ -325,6 +325,33 @@ export async function POST(req: NextRequest) {
     requestType: routeConfig.requestType,
   };
 
+  // MShape demo form (default page): the visitor goes straight on to pick a
+  // Calendly slot, so reply as soon as the lead is validated and deliver to
+  // Sheets + TeleCRM after the response instead of making them wait on both.
+  if (!productRoute) {
+    after(() =>
+      Promise.allSettled([
+        appendToGoogleSheet(leadData).catch((err: Error) => {
+          console.error('[Google Sheets] Error:', err?.message);
+          throw err;
+        }),
+        sendToTeleCRM(leadData).catch((err: Error) => {
+          console.error('[TeleCRM] Error:', err?.message);
+          throw err;
+        }),
+      ])
+    );
+
+    return NextResponse.json(
+      {
+        success: true,
+        route: routeConfig.sheetTab,
+        timestamp: new Date().toISOString(),
+      },
+      { status: 201 }
+    );
+  }
+
   const sheet = appendToGoogleSheet(leadData).catch((err: Error) => {
     console.error('[Google Sheets] Error:', err?.message);
     throw err;

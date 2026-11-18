@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { preconnect, preload } from "react-dom";
 import Script from "next/script";
 
 declare global {
@@ -34,6 +35,19 @@ const ANSWER_SLOTS = {
   clinic: "a6",
   city: "a7",
 } as const;
+
+const CALENDLY_SCRIPT = "https://assets.calendly.com/assets/external/widget.js";
+
+/**
+ * Opens connections to Calendly and starts downloading widget.js ahead of
+ * time. BookDemo calls this as soon as the visitor touches the form, so by
+ * the time /book-slot loads the script is already in the browser cache.
+ */
+export function warmUpCalendly() {
+  preconnect("https://calendly.com");
+  preconnect("https://assets.calendly.com");
+  preload(CALENDLY_SCRIPT, { as: "script" });
+}
 
 const PREFILL_KEY = "nw:lead-prefill";
 
@@ -70,6 +84,9 @@ export default function CalendlyInline() {
   const ref = useRef<HTMLDivElement>(null);
   const started = useRef(false);
 
+  // Rendered into <head> during SSR, so the fetch starts before hydration.
+  warmUpCalendly();
+
   const start = () => {
     if (started.current || !ref.current || !window.Calendly) return;
     started.current = true;
@@ -97,7 +114,7 @@ export default function CalendlyInline() {
     <>
       <div ref={ref} className="h-[700px] min-w-[320px]" />
       <Script
-        src="https://assets.calendly.com/assets/external/widget.js"
+        src={CALENDLY_SCRIPT}
         strategy="afterInteractive"
         onReady={start}
       />
