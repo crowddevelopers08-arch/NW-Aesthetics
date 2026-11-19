@@ -66,7 +66,7 @@ export default function ThankYouPage() {
             </h1>
 
             <p className="mx-auto mt-4 max-w-xl text-[clamp(1rem,2.2vw,1.175rem)] leading-relaxed font-medium text-pretty text-ink-soft">
-              We&apos;ll call you to fix demo.
+              Complete the registration details to Book a Calendly Call.
             </p>
 
             <div className="mt-9 grid gap-px overflow-hidden rounded-xl border border-line bg-line text-left sm:grid-cols-3">

@@ -205,7 +205,7 @@ export default function BookDemo() {
               </button>
 
               <p className="mt-3 text-center text-[14px] font-medium text-ink-faint">
-                We&apos;ll call you to fix demo.
+                Complete the registration details to Book a Calendly Call.
               </p>
             </form>
           </GlassCard>
