@@ -1,11 +1,11 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import GlassCard from "@/components/ui/GlassCard";
 import { Eyebrow, Swash } from "@/components/ui/Section";
 import Reveal from "@/components/ui/Reveal";
 import { goToThankYou } from "@/lib/metaPixel";
-import { savePrefill, warmUpCalendly } from "@/components/ui/CalendlyInline";
+import { savePrefill } from "@/components/ui/CalendlyInline";
 
 const TEXT_FIELDS = [
   { name: "name", label: "Name", type: "text", autoComplete: "name" },
@@ -22,28 +22,9 @@ const TEXT_FIELDS = [
 export default function BookDemo() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
-  const warmed = useRef(false);
-
-  /**
-   * First touch of the form: fetch the /book-slot page and Calendly's script
-   * in the background while the visitor is still typing, so the slot picker
-   * opens almost instantly after submit.
-   */
-  const warmUp = () => {
-    if (warmed.current) return;
-    warmed.current = true;
-    // goToThankYou does a full page load, so prefetch the HTML document
-    // itself (router.prefetch only covers client-side navigations).
-    const link = document.createElement("link");
-    link.rel = "prefetch";
-    link.href = "/book-slot";
-    document.head.appendChild(link);
-    warmUpCalendly();
-  };
-
   /**
    * Posts to /api/submit-lead, which fans the lead out to Google Sheets and
-   * TeleCRM, then hands the visitor to /book-slot to pick a Calendly time.
+   * TeleCRM, then sends the visitor to the thank-you page.
    */
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -77,7 +58,7 @@ export default function BookDemo() {
         city: String(values.city ?? ""),
       });
       form.reset();
-      goToThankYou("/book-slot");
+      goToThankYou("/thank-you");
     } catch {
       setError(
         "We couldn't reach our server. Check your connection and try again.",
@@ -110,8 +91,6 @@ export default function BookDemo() {
           <GlassCard className="mt-5 p-4 sm:mt-6 sm:p-6 lg:p-7" hover={false}>
             <form
               onSubmit={handleSubmit}
-              onFocus={warmUp}
-              onPointerEnter={warmUp}
               noValidate
             >
               {/* Honeypot: off-screen and skipped by tab order, so only a bot
